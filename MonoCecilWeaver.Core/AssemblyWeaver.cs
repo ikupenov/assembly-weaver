@@ -11,10 +11,10 @@ namespace MonoCecilWeaver.Core
     {
         private readonly string assemblyPath;
 
-        public AssemblyWeaver(string assemblyPath, IEnumerable<string> dependenciesDirectories)
+        public AssemblyWeaver(string assemblyPath, IEnumerable<string> dependencyDirectories)
         {
             var assemblyResolver = new DefaultAssemblyResolver();
-            foreach (var dependencyDirectory in dependenciesDirectories)
+            foreach (var dependencyDirectory in dependencyDirectories)
             {
                 assemblyResolver.AddSearchDirectory(dependencyDirectory);
             }

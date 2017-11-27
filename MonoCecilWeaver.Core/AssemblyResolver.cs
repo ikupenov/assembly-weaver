@@ -18,10 +18,10 @@ namespace MonoCecilWeaver.Core
         private const char NestedClassSeparatorBefore = '/';
         private const char NestedClassSeparatorAfter = '+';
 
-        public AssemblyResolver(string assemblyPath, IEnumerable<string> dependenciesDirectories)
+        public AssemblyResolver(string assemblyPath, IEnumerable<string> dependencyDirectories)
         {
             this.Assembly = Assembly.LoadFrom(assemblyPath);
-            this.ReferencedAssemblies = GetReferencedAssemblies(this.Assembly, dependenciesDirectories);
+            this.ReferencedAssemblies = GetReferencedAssemblies(this.Assembly, dependencyDirectories);
 
             this.ResolvedTypes = new Dictionary<string, Type>();
         }
@@ -116,7 +116,7 @@ namespace MonoCecilWeaver.Core
         }
 
         // TODO: Load assemblies recursively
-        private IEnumerable<Assembly> GetReferencedAssemblies(Assembly assembly, IEnumerable<string> dependenciesDirectories)
+        private IEnumerable<Assembly> GetReferencedAssemblies(Assembly assembly, IEnumerable<string> dependencyDirectories)
         {
             var referencedAssemblies = new List<Assembly>();
 
@@ -129,7 +129,7 @@ namespace MonoCecilWeaver.Core
 
                 var doesExist = false;
 
-                foreach (var dependencyDirectory in dependenciesDirectories)
+                foreach (var dependencyDirectory in dependencyDirectories)
                 {
                     var assemblyReferencePathDll = Path.Combine(dependencyDirectory, $"{assemblyReferenceName.Name}.dll");
                     var assemblyReferencePathExe = Path.Combine(dependencyDirectory, $"{assemblyReferenceName.Name}.exe");
