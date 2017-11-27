@@ -61,8 +61,10 @@ namespace MonoCecilWeaver
 
         private static string CreateBackup(string filePath, bool overwrite = true)
         {
-            var binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
-            var backupFilePath = $"{Path.GetTempPath()}{Path.GetFileName(filePath)}.backup";
+            var binUriPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
+            var binLocalPath = new Uri(binUriPath).LocalPath;
+
+            var backupFilePath = $"{binLocalPath}{Path.DirectorySeparatorChar}{Path.GetFileName(filePath)}.backup";
 
             File.Copy(filePath, backupFilePath, overwrite);
 
