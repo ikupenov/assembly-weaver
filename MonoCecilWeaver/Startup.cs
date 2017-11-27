@@ -13,6 +13,7 @@ namespace MonoCecilWeaver
     internal static class Startup
     {
         private const string TestMethodAttribute = "TestMethodAttribute";
+        private const string AssemblyBackupSuffix = "backup";
 
         private static void Main(string[] args)
         {
@@ -62,7 +63,7 @@ namespace MonoCecilWeaver
         private static string CreateBackup(string filePath, bool overwrite = true)
         {
             var binPath = Path.GetDirectoryName(filePath);
-            var backupFilePath = $"{binPath}{Path.DirectorySeparatorChar}{Path.GetFileName(filePath)}.backup";
+            var backupFilePath = $"{binPath}{Path.DirectorySeparatorChar}{Path.GetFileName(filePath)}.{AssemblyBackupSuffix}";
 
             File.Copy(filePath, backupFilePath, overwrite);
 
