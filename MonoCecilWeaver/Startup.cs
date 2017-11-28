@@ -22,10 +22,22 @@ namespace MonoCecilWeaver
                 throw new ArgumentException("Invalid parameters.");
             }
 
+            /* In order to leave the main assembly unlocked,
+            we create a backup file and use it for readonly operations */
             var backupAssemblyPath = CreateBackup(options.AssemblyPath);
-            
-            var assemblyWeaver = new AssemblyWeaver(options.AssemblyPath, options.DependencyDirectories);
-            var assemblyResolver = new AssemblyResolver(backupAssemblyPath, options.DependencyDirectories);
+
+            var dependencyDirectories = new List<string>
+            {
+                Path.GetDirectoryName(options.AssemblyPath)
+            };
+
+            if (options.DependencyDirectories != null)
+            {
+                dependencyDirectories.AddRange(options.DependencyDirectories);
+            }
+
+            var assemblyWeaver = new AssemblyWeaver(options.AssemblyPath, dependencyDirectories);
+            var assemblyResolver = new AssemblyResolver(backupAssemblyPath, dependencyDirectories);
             var definitionProvider = new DefinitionProvider(assemblyWeaver.AssemblyDefinition);
 
             if (options.ShouldEnableLogging)

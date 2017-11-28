@@ -3,14 +3,14 @@
 namespace MonoCecilWeaver
 {
     /// <summary>
-    /// Maps input parameters.
+    /// Maps input parameters to their properties.
     /// </summary>
     internal class Options
     {
         [Option('a', "assemblyPath", Required = true, HelpText = "Assembly to weave.")]
         public string AssemblyPath { get; set; }
 
-        [Option('l', "enableLogging", DefaultValue = true, HelpText = "Enable exception logging.")]
+        [Option('l', "enableLogging", DefaultValue = false, HelpText = "Enable exception logging.")]
         public bool ShouldEnableLogging { get; set; }
 
         [Option('p', "enableProfiler", DefaultValue = false, HelpText = "Enable performance profiler.")]
