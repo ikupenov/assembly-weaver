@@ -7,6 +7,9 @@ using MonoCecilWeaver.Core.Contexts;
 
 namespace MonoCecilWeaver.Core
 {
+    /// <summary>
+    /// Wraps the logic of setupping <see cref="MethodContext"/> and saving changes to the given assembly.
+    /// </summary>
     public class AssemblyWeaver
     {
         private readonly string assemblyPath;
@@ -27,6 +30,10 @@ namespace MonoCecilWeaver.Core
 
         public AssemblyDefinition AssemblyDefinition { get; }
 
+        /// <summary>
+        /// Wraps up the <see cref="MethodDefinition"/> and its <see cref="ModuleDefinition"/>,
+        /// allowing for easy manipulation of the <see cref="MethodDefinition"/> object.
+        /// </summary>
         public MethodContext Setup(Expression<Action> expression)
         {
             var methodCall = expression.Body as MethodCallExpression;
@@ -40,9 +47,16 @@ namespace MonoCecilWeaver.Core
             return new MethodContext(this.AssemblyDefinition.MainModule, methodDefinition);
         }
 
+        /// <summary>
+        /// Wraps up the <see cref="MethodDefinition"/> and its <see cref="ModuleDefinition"/>,
+        /// allowing for easy manipulation of the <see cref="MethodDefinition"/> object.
+        /// </summary>
         public MethodContext Setup(MethodDefinition methodDefinition) =>
              new MethodContext(this.AssemblyDefinition.MainModule, methodDefinition);
 
+        /// <summary>
+        /// Save changes to the <see cref="Mono.Cecil.AssemblyDefinition"/>.
+        /// </summary>
         public void Reweave() =>
             this.AssemblyDefinition.Write(this.assemblyPath);
     }

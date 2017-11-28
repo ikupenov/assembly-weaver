@@ -5,6 +5,9 @@ using Mono.Cecil.Rocks;
 
 namespace MonoCecilWeaver.Core
 {
+    /// <summary>
+    /// Used to provide a <see cref="MethodDefinition"/> collection from the given <see cref="AssemblyDefinition"/>.
+    /// </summary>
     public class DefinitionProvider
     {
         private readonly AssemblyDefinition assemblyDefinition;

@@ -8,6 +8,10 @@ using ExceptionHandler = MonoCecilWeaver.Target.ExceptionHandler;
 
 namespace MonoCecilWeaver.Core.Contexts
 {
+    /// <summary>
+    /// Wrapper of the <see cref="MethodDefinition"/> and its <see cref="ModuleDefinition"/>,
+    /// allowing for easy manipulation of the <see cref="MethodDefinition"/> object.
+    /// </summary>
     public class MethodContext
     {
         public MethodContext(ModuleDefinition module, MethodDefinition method)
@@ -16,10 +20,23 @@ namespace MonoCecilWeaver.Core.Contexts
             this.Method = method;
         }
 
+        /// <summary>
+        /// The module (assembly) of the <see cref="MethodContext.Method"/>.
+        /// </summary>
         public ModuleDefinition Module { get; }
 
+        /// <summary>
+        /// The <see cref="MethodDefinition"/> that is going to be manipulated.
+        /// </summary>
         public MethodDefinition Method { get; }
 
+        /// <summary>
+        /// Catches the given <see cref="Exception"/> and handles it using the given <see cref="ExceptionHandler"/>.
+        /// It does not rethrow the caught <see cref="Exception"/> and returns fake data instead.
+        /// </summary>
+        /// <typeparam name="TException">The <see cref="Exception"/> that will be handled</typeparam>
+        /// <typeparam name="THandler">The <see cref="ExceptionHandler"/> for the given <see cref="Exception"/></typeparam>
+        /// <returns>The current instance</returns>
         public MethodContext Catch<TException, THandler>()
             where TException : Exception
             where THandler : ExceptionHandler, new()
@@ -97,6 +114,13 @@ namespace MonoCecilWeaver.Core.Contexts
             return this;
         }
 
+        /// <summary>
+        /// Catches the given <see cref="Exception"/> and handles it using the given <see cref="ExceptionHandler"/>.
+        /// Unlike <seealso cref="MethodContext.Catch{TException, THandler}"/> it rethrows the <see cref="Exception"/> after it has been handled.
+        /// </summary>
+        /// <typeparam name="TException">The <see cref="Exception"/> that will be handled</typeparam>
+        /// <typeparam name="THandler">The <see cref="ExceptionHandler"/> for the given <see cref="Exception"/></typeparam>
+        /// <returns>The current instance</returns>
         public MethodContext Rethrow<TException, THandler>()
             where TException : Exception
             where THandler : ExceptionHandler, new()
@@ -161,6 +185,11 @@ namespace MonoCecilWeaver.Core.Contexts
             return this;
         }
 
+        /// <summary>
+        /// Inserts the given <see cref="PerformanceProfiler"/>. Invokes the <see cref="PerformanceProfiler.Start"/> 
+        /// handler in the beggining and the <see cref="PerformanceProfiler.Stop"/> handler in the end of the method.
+        /// </summary>
+        /// <returns>The current instance</returns>
         public MethodContext Measure<TProfiler>()
             where TProfiler : PerformanceProfiler
         {
@@ -245,15 +274,11 @@ namespace MonoCecilWeaver.Core.Contexts
             return variable;
         }
 
-        private VariableDefinition AddVariable(Type variableType)
-        {
-            return AddVariable(Module.Import(variableType));
-        }
+        private VariableDefinition AddVariable(Type variableType) =>
+             AddVariable(Module.Import(variableType));
 
-        private VariableDefinition AddVariable<TVariable>()
-        {
-            return AddVariable(Module.Import(typeof(TVariable)));
-        }
+        private VariableDefinition AddVariable<TVariable>() =>
+             AddVariable(Module.Import(typeof(TVariable)));
 
         private Mono.Cecil.Cil.ExceptionHandler AddExceptionHandler<TException>(
             ExceptionHandlerType handlerType,

@@ -7,6 +7,10 @@ using Mono.Cecil;
 
 namespace MonoCecilWeaver.Core
 {
+    /// <summary>
+    /// Loads an <see cref="System.Reflection.Assembly"/> and its dependencies in the current <see cref="AppDomain"/>.
+    /// Allowing for resolving types which reside in the given <see cref="System.Reflection.Assembly"/>.
+    /// </summary>
     public class AssemblyResolver
     {
         private const string Mscorlib = "mscorlib";
@@ -26,12 +30,24 @@ namespace MonoCecilWeaver.Core
             this.ResolvedTypes = new Dictionary<string, Type>();
         }
 
+        /// <summary>
+        /// The resolved <see cref="System.Reflection.Assembly"/>.
+        /// </summary>
         public Assembly Assembly { get; }
 
+        /// <summary>
+        /// The assemblies referenced directly by the <see cref="Assembly"/>.
+        /// </summary>
         public IEnumerable<Assembly> ReferencedAssemblies { get; }
 
         private IDictionary<string, Type> ResolvedTypes { get; }
 
+        /// <summary>
+        /// Resolves the <see cref="Type"/> of the given <see cref="TypeReference"/>.
+        /// </summary>
+        /// <param name="throwError">
+        /// Whether the method should throw an error if the <see cref="Type"/> cannot be resolved.
+        /// </param>
         public Type GetType(TypeReference typeReference, bool throwError = false)
         {
             var typeReferenceName = typeReference.FullName;
@@ -57,6 +73,12 @@ namespace MonoCecilWeaver.Core
             return type;
         }
 
+        /// <summary>
+        /// Resolves the <see cref="Type"/> for the given <paramref name="typeName"/>.
+        /// </summary>
+        /// <param name="throwError">
+        /// Whether the method should throw an error if the <see cref="Type"/> cannot be resolved.
+        /// </param>
         public Type GetType(string typeName, bool throwError = false)
         {
             typeName = typeName.Replace(GenericOpeneningTagBefore, GenericOpeningTagAfter);
@@ -95,6 +117,12 @@ namespace MonoCecilWeaver.Core
             return null;
         }
 
+        /// <summary>
+        /// Resolves the <see cref="Type"/> of the given <see cref="GenericInstanceType"/> recursively.
+        /// </summary>
+        /// <param name="throwError">
+        /// Whether the method should throw an error if the <see cref="Type"/> cannot be resolved.
+        /// </param>
         public Type GetGenericType(GenericInstanceType genericInstanceType, bool throwError = false)
         {
             var genericType = GetType(genericInstanceType.GetElementType().FullName);

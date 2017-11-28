@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using CommandLine;
 using Mono.Cecil;
 using MonoCecilWeaver.Core;
@@ -13,6 +12,7 @@ namespace MonoCecilWeaver
     internal static class Startup
     {
         private const string TestMethodAttribute = "TestMethodAttribute";
+        private const string AssemblyBackupSuffix = "backup";
 
         private static void Main(string[] args)
         {
@@ -23,7 +23,7 @@ namespace MonoCecilWeaver
             }
 
             var backupAssemblyPath = CreateBackup(options.AssemblyPath);
-
+            
             var assemblyWeaver = new AssemblyWeaver(options.AssemblyPath, options.DependencyDirectories);
             var assemblyResolver = new AssemblyResolver(backupAssemblyPath, options.DependencyDirectories);
             var definitionProvider = new DefinitionProvider(assemblyWeaver.AssemblyDefinition);
@@ -61,8 +61,8 @@ namespace MonoCecilWeaver
 
         private static string CreateBackup(string filePath, bool overwrite = true)
         {
-            var binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
-            var backupFilePath = $"{Path.GetTempPath()}{Path.GetFileName(filePath)}.backup";
+            var binPath = Path.GetDirectoryName(filePath);
+            var backupFilePath = $"{binPath}{Path.DirectorySeparatorChar}{Path.GetFileName(filePath)}.{AssemblyBackupSuffix}";
 
             File.Copy(filePath, backupFilePath, overwrite);
 
