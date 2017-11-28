@@ -2,6 +2,9 @@
 
 namespace MonoCecilWeaver
 {
+    /// <summary>
+    /// Maps input parameters.
+    /// </summary>
     internal class Options
     {
         [Option('a', "assemblyPath", Required = true, HelpText = "Assembly to weave.")]

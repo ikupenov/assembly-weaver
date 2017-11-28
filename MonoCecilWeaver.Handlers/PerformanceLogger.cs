@@ -6,6 +6,9 @@ using MonoCecilWeaver.Target;
 
 namespace MonoCecilWeaver.Handlers
 {
+    /// <summary>
+    /// Measures the performance of a method.
+    /// </summary>
     public class PerformanceLogger : PerformanceProfiler
     {
         private readonly string profilerLogPath = ConfigurationManager.AppSettings["ProfilerLogPath"];
@@ -19,12 +22,18 @@ namespace MonoCecilWeaver.Handlers
             this.fileLogger = LoggerFactory.CreateLogger(this.profilerLogPath);
         }
 
+        /// <summary>
+        /// Invoked in the beginning of a method.
+        /// </summary>
         public override void Start()
         {
             this.stopwatch.Reset();
             this.stopwatch.Start();
         }
 
+        /// <summary>
+        /// Invoked in the end of a method.
+        /// </summary>
         public override void Stop()
         {
             this.stopwatch.Stop();
