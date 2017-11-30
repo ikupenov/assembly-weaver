@@ -12,7 +12,7 @@ namespace MonoCecilWeaver
     internal static class Startup
     {
         private const string TestMethodAttribute = "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute";
-        private const string AssemblyBackupSuffix = "backup";
+        private const string ReadonlyAssemblySuffix = "readonly";
 
         private static void Main(string[] args)
         {
@@ -23,8 +23,8 @@ namespace MonoCecilWeaver
             }
 
             /* In order to leave the main assembly unlocked,
-            we create a backup file and use it for readonly operations */
-            var backupAssemblyPath = CreateBackup(options.AssemblyPath);
+            we create a copy of the file and use it for readonly operations */
+            var readonlyAssemblyPath = CreateReadonlyAssembly(options.AssemblyPath);
 
             var dependencyDirectories = new List<string>
             {
@@ -37,7 +37,7 @@ namespace MonoCecilWeaver
             }
 
             var assemblyWeaver = new AssemblyWeaver(options.AssemblyPath, dependencyDirectories);
-            var assemblyResolver = new AssemblyResolver(backupAssemblyPath, dependencyDirectories);
+            var assemblyResolver = new AssemblyResolver(readonlyAssemblyPath, dependencyDirectories);
             var definitionProvider = new DefinitionProvider(assemblyWeaver.AssemblyDefinition);
 
             if (options.ShouldEnableLogging)
@@ -71,10 +71,10 @@ namespace MonoCecilWeaver
                     .Setup(assemblyWeaver)
                     .Measure<PerformanceLogger>();
 
-        private static string CreateBackup(string filePath, bool overwrite = true)
+        private static string CreateReadonlyAssembly(string filePath, bool overwrite = true)
         {
             var binPath = Path.GetDirectoryName(filePath);
-            var backupFilePath = $"{binPath}{Path.DirectorySeparatorChar}{Path.GetFileName(filePath)}.{AssemblyBackupSuffix}";
+            var backupFilePath = $"{binPath}{Path.DirectorySeparatorChar}{Path.GetFileName(filePath)}.{ReadonlyAssemblySuffix}";
 
             File.Copy(filePath, backupFilePath, overwrite);
 
