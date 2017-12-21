@@ -58,7 +58,7 @@ namespace MonoCecilWeaver
             AssemblyResolver assemblyResolver,
             IEnumerable<MethodDefinition> methodDefinitions) =>
                 methodDefinitions
-                    .Where(m => m.ShouldEnableLogging(assemblyResolver) || m.HasCustomAttribute(TestMethodAttribute))
+                    .Where(m => m.ShouldEnableLogging(assemblyResolver))
                     .Setup(assemblyWeaver)
                     .Rethrow<Exception, TestContextExceptionLogger>();
 
@@ -67,7 +67,7 @@ namespace MonoCecilWeaver
             AssemblyResolver assemblyResolver,
             IEnumerable<MethodDefinition> methodDefinitions) =>
                 methodDefinitions
-                    //.Where(m => m.ShouldEnableProfiler(assemblyResolver))
+                    .Where(m => m.ShouldEnableProfiler(assemblyResolver))
                     .Setup(assemblyWeaver)
                     .Measure<PerformanceLogger>();
 
