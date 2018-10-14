@@ -11,7 +11,6 @@ namespace MonoCecilWeaver
 {
     internal static class Startup
     {
-        private const string TestMethodAttribute = "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute";
         private const string ReadonlyAssemblySuffix = "readonly";
 
         private static void Main(string[] args)
